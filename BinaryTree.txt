@@ -1,0 +1,186 @@
+import javax.swing.tree.TreeNode;
+import java.util.*;
+
+class Node {
+    public char val;
+    public Node left;
+    public Node right;
+
+    public Node(char val) {
+        this.val = val;
+    }
+}
+
+class Solution {
+
+    public boolean isCompleteTree(TreeNode root) {
+
+    }
+
+
+
+    public int widthOfBinaryTree(Node root) {
+        if (root == null) return 0;
+        int leftHeight = widthOfBinaryTree(root.left);
+        int rightHeight = widthOfBinaryTree(root.right);
+        return leftHeight>rightHeight?leftHeight+1:rightHeight+1;
+    }
+}
+
+
+
+public class BinaryTree {
+    boolean isCompleteTree(Node root) {
+        Queue <Node> queue= new LinkedList<>();
+        if (root == null) return true;
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            Node cur = queue.poll();
+            if (cur != null){
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            }else {
+                break;
+            }
+        }
+        while (!queue.isEmpty()){
+            Node cur = queue.peek();
+            if (cur!=null){
+                return false;
+            }else {
+                queue.poll();
+            }
+        }
+        return true;
+    }
+
+
+
+    class Solution {
+        public Node lowestCommonAncestor(Node root, Node p, Node q) {
+            if (root == null) return null;
+            if (root == p || root == q) return root;
+            Node leftTree = lowestCommonAncestor(root.left, p, q);
+            Node rightTree = lowestCommonAncestor(root.right, p, q);
+            if (leftTree!=null&&rightTree!=null) return root;
+            if (leftTree!=null) return leftTree;
+            if (rightTree!=null) return rightTree;
+            return null;
+        }
+    }
+
+    public int i =0;
+    public Node createTreeByString(String str){
+        Node root = null;
+        if (str.charAt(i) != '#'){
+            root = new Node(str.charAt(i));
+            i++;
+            root.left = createTreeByString(str);
+            root.right = createTreeByString(str);
+        }else {
+            i++;
+        }
+        return root;
+    }
+
+
+ class Solution {
+
+
+        public TreeNode buildTreeChild(int[] inorder,int[] postorder,int inbegin,int inend) {
+            if(inbegin > inend) {
+                return null;
+            }
+            TreeNode root = new TreeNode(postorder[preIndex]);
+            int inorderIndex = findInoderIndexOfRoot(inorder,inbegin,inend,postorder[preIndex]);
+            preIndex--;
+
+
+            root.right = buildTreeChild(inorder,
+                    postorder,inorderIndex+1,inend);
+
+
+            root.left = buildTreeChild(inorder,
+                    postorder,inbegin,inorderIndex-1);
+            return root;
+        }
+
+
+        public int findInoderIndexOfRoot(int[] inorder,int inbegin,int inend,int val) {
+            for (int j = inbegin; j <= inend; j++) {
+                if(inorder[j] == val) {
+                    return j;
+                }
+            }
+            return -1;
+        }
+
+
+        public int preIndex = 0;
+
+
+        public TreeNode buildTree(int[] inorder, int[] postorder) {
+            if(postorder == null || inorder == null) {
+                return null;
+            }
+            if(postorder.length == 0 || inorder.length == 0) {
+                return null;
+            }
+            preIndex = postorder.length-1;
+            return buildTreeChild(inorder,postorder,
+                    0,inorder.length-1);
+        }
+
+
+    }
+
+
+public Node prev = null;
+    public  void ConvertChild(Node root) {
+        if(root == null) return ;
+        ConvertChild(root.left);
+        root.left = prev;
+        if(prev != null) {
+            prev.right = root;
+        }
+        prev = root;
+        ConvertChild(root.right);
+    }
+
+
+    public  Node Convert(Node pRootOfTree) {
+        if(pRootOfTree == null) return null;
+        ConvertChild(pRootOfTree);
+        Node head = pRootOfTree;
+        while (head.left != null) {
+            head = head.left;
+        }
+        return head;
+    }
+
+
+ public void tree2strChild(Node t,StringBuilder sb) {
+        if(t == null) return;
+        sb.append(t.val);
+        if(t.left == null) {
+            if(t.right == null) {
+                return;
+            }else {
+                sb.append("()");
+            }
+        }else {
+            sb.append("(");
+            tree2strChild(t.left,sb);
+            sb.append(")");
+        }
+
+
+        if(t.right == null) {
+            return;
+        }else {
+            sb.append("(");
+            tree2strChild(t.right,sb);
+            sb.append(")");
+        }
+    }
+}
